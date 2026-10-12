@@ -24,6 +24,45 @@ python analysis.py
 ## Results
 Results are written to `results.json` (and a chart to `figures/`).
 
+## Results (latest run)
+
+On simulated 3D drone trajectories, a standard adaptive model-selection predictor reached 2.84 m mean position error versus 1.96 m for my compact LightGBM model on the same held-out test set (averaged over 0.5 s and 1 s horizons).
+
+| Metric | Value |
+|---|---|
+| baseline_score | 2.842 |
+| improved_score | 1.962 |
+| baseline_score_std | 0 |
+| improved_score_std | 0.0001804 |
+| improvement | 0.8798 |
+| baseline_sharp | 4.076 |
+| improved_sharp | 3.076 |
+| baseline_sharp_std | 0 |
+| improved_sharp_std | 0.0004306 |
+| baseline_h05 | 1.61 |
+| improved_h05 | 1.166 |
+| baseline_h05_std | 2.22e-16 |
+| improved_h05_std | 0.0001476 |
+| baseline_h10 | 4.074 |
+| improved_h10 | 2.758 |
+| baseline_h10_std | 0 |
+| improved_h10_std | 0.0004984 |
+| baseline_latency_ms | 0.001164 |
+| improved_latency_ms | 0.04179 |
+| pool_cv_score | 2.623 |
+| pool_cv_sharp | 4.275 |
+| pool_ca_score | 3.7 |
+| pool_ca_sharp | 4.481 |
+| pool_damped_score | 3.52 |
+| pool_damped_sharp | 4.499 |
+| pool_ridge_ar_score | 2.536 |
+| pool_ridge_ar_sharp | 3.65 |
+| n_sharp_test_windows | 17106 |
+
+Run on 2026-10-12. Full output: [results.json](results.json) · [run.log](run.log)
+
+Notes: Synthetic data: conclusions depend on the simulator's maneuver statistics and noise (0.3 m). Targets are true (noise-free) future positions; inputs are noisy. Sharp windows = mean true acceleration over the next 1 s above 3 m/s^2 (used only for evaluation). 'One' LightGBM model is a set of 6 output-wise regressors with shared hyper-parameters tuned on one target. Latency is batch-amortised per prediction on the same test windows (features included), 2 CPU threads for LightGBM. Baseline is deterministic (std 0); LightGBM seeds 42-44 differ only in subsampling. Windows overlap within a trajectory, so errors are correlated.
+
 ## Reference
 
 This project is motivated by the following paper:
